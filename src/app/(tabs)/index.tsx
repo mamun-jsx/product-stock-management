@@ -9,8 +9,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CATEGORIES } from "../../../constants";
+import CategoryItem from "@/components/CategoryItem";
+import { useRouter } from "expo-router";
 const { width } = Dimensions.get("window");
 const Home = () => {
+  const router = useRouter();
+  const categories = [{ id: "all", name: "All", icon: "grid" }, ...CATEGORIES];
   return (
     <SafeAreaView className="flex-1" edges={["top"]}>
       <Header showMenu showCart showLogo />
@@ -53,7 +58,31 @@ const Home = () => {
             </View>
           ))}
         </ScrollView>
-       
+        {/* categories */}
+        <View className="mb-6">
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-xl font-bold text-primary">Categories</Text>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="w-full"
+          >
+            {categories?.map((cat: any) => (
+              <CategoryItem
+                key={cat.id}
+                item={cat}
+                isSelected={false}
+                onPress={() =>
+                  router.push({
+                    pathname: "/shop",
+                    params: { category: cat.id === "all" ? "" : cat.name },
+                  })
+                }
+              />
+            ))}
+          </ScrollView>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
